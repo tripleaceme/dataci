@@ -1,0 +1,41 @@
+# .github/workflows/dataci.yml
+# Add this to your dbt project repository
+
+name: DataCI
+
+on:
+  pull_request:
+    paths:
+      - 'models/**'
+      - 'macros/**'
+      - 'tests/**'
+      - 'dbt_project.yml'
+
+jobs:
+  dataci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history needed for git diff
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dbt
+        run: pip install dbt-core dbt-postgres  # or dbt-bigquery, dbt-snowflake
+
+      - name: Compile dbt (generate manifest)
+        run: dbt compile
+        # This generates target/manifest.json
+
+      - name: Run DataCI
+        uses: YOUR_USERNAME/dataci@v1
+        with:
+          manifest-path: 'target/manifest.json'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          fail-on-missing-tests: 'true'
+          coverage-threshold: '60'

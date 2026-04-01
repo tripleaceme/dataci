@@ -1,0 +1,39 @@
+name: 'DataCI'
+description: 'CI/CD for analytics engineering — impact analysis, test coverage, and more for dbt PRs'
+author: 'Ayoade Adegbite'
+
+branding:
+  icon: 'bar-chart-2'
+  color: 'blue'
+
+inputs:
+  manifest-path:
+    description: 'Path to dbt manifest.json (relative to repo root)'
+    required: true
+    default: 'target/manifest.json'
+  github-token:
+    description: 'GitHub token for posting PR comments'
+    required: true
+    default: ${{ github.token }}
+  project-dir:
+    description: 'Path to the dbt project root (where dbt_project.yml lives)'
+    required: false
+    default: '.'
+  fail-on-missing-tests:
+    description: 'Fail the action if new models have no tests'
+    required: false
+    default: 'false'
+  coverage-threshold:
+    description: 'Minimum test coverage percentage (0-100). Action fails if below this.'
+    required: false
+    default: '0'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  env:
+    INPUT_MANIFEST_PATH: ${{ inputs.manifest-path }}
+    INPUT_GITHUB_TOKEN: ${{ inputs.github-token }}
+    INPUT_PROJECT_DIR: ${{ inputs.project-dir }}
+    INPUT_FAIL_ON_MISSING_TESTS: ${{ inputs.fail-on-missing-tests }}
+    INPUT_COVERAGE_THRESHOLD: ${{ inputs.coverage-threshold }}
