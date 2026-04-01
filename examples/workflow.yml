@@ -1,7 +1,7 @@
 # .github/workflows/dataci.yml
 # Add this to your dbt project repository
 
-name: DaterCI
+name: DataCI
 
 on:
   pull_request:
@@ -32,7 +32,7 @@ jobs:
         run: dbt compile
         # This generates target/manifest.json
 
-      - name: Run DaterCI
+      - name: Run DataCI
         uses: YOUR_USERNAME/dataci@v1
         with:
           manifest-path: 'target/manifest.json'

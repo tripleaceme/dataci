@@ -1,4 +1,4 @@
-"""Post or update the DaterCI report as a PR comment."""
+"""Post or update the DataCI report as a PR comment."""
 
 from __future__ import annotations
 
@@ -16,7 +16,7 @@ def get_pull_request(token: str, repo_name: str, pr_number: int) -> PullRequest:
 
 
 def post_or_update_comment(pr: PullRequest, body: str) -> None:
-    """Post a new comment or update the existing DaterCI comment.
+    """Post a new comment or update the existing DataCI comment.
 
     Uses the COMMENT_MARKER to find and update previous reports,
     so we don't spam the PR with multiple comments on re-runs.
@@ -24,8 +24,8 @@ def post_or_update_comment(pr: PullRequest, body: str) -> None:
     for comment in pr.get_issue_comments():
         if COMMENT_MARKER in comment.body:
             comment.edit(body)
-            print(f"Updated existing DaterCI comment (id={comment.id})")
+            print(f"Updated existing DataCI comment (id={comment.id})")
             return
 
     pr.create_issue_comment(body)
-    print("Posted new DaterCI comment")
+    print("Posted new DataCI comment")
