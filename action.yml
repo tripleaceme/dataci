@@ -1,5 +1,5 @@
 name: 'Data CI'
-description: 'CI/CD for analytics engineering: Impact Analysis, AI-powered SQL Review, Query Cost Estimation (QCE), Lineage Visualization, and Test Coverage Reporting for dbt PRs'
+description: 'CI/CD for AE: Impact Analysis, AI SQL Review, Cost Estimation, Lineage & Test Coverage for dbt PRs'
 author: 'Ayoade Adegbite'
 
 branding:
