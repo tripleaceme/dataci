@@ -64,7 +64,7 @@ jobs:
         run: dbt compile
 
       - name: Run DataCI
-        uses: ayoade-adegbite/dataci@v1
+        uses: tripleaceme/dataci@v1
         with:
           manifest-path: 'target/manifest.json'
           github-token: ${{ secrets.GITHUB_TOKEN }}
