@@ -1,8 +1,8 @@
-# DataCI
+# DaterCI
 
 **CI/CD for analytics engineering.**
 
-DataCI posts a detailed report on every dbt pull request — showing **impact analysis**, **test coverage**, and **risk assessment** — so reviewers know exactly what changed and what it affects.
+DaterCI posts a detailed report on every dbt pull request — showing **impact analysis**, **test coverage**, and **risk assessment** — so reviewers know exactly what changed and what it affects.
 
 ---
 
@@ -36,7 +36,7 @@ Add this workflow to your dbt project:
 ```yaml
 # .github/workflows/dataci.yml
 
-name: DataCI
+name: DaterCI
 on:
   pull_request:
     paths:
@@ -63,14 +63,14 @@ jobs:
       - name: Compile dbt
         run: dbt compile
 
-      - name: Run DataCI
+      - name: Run DaterCI
         uses: ayoade-adegbite/dataci@v1
         with:
           manifest-path: 'target/manifest.json'
           github-token: ${{ secrets.GITHUB_TOKEN }}
 ```
 
-That's it. Open a PR that changes a model and DataCI posts the report.
+That's it. Open a PR that changes a model and DaterCI posts the report.
 
 ---
 
@@ -89,13 +89,13 @@ That's it. Open a PR that changes a model and DataCI posts the report.
 ## Features
 
 ### Impact Analysis
-When you change a model, DataCI traces the full downstream dependency graph and tells you:
+When you change a model, DaterCI traces the full downstream dependency graph and tells you:
 - How many models are affected
 - Which specific models are downstream
 - Risk level (LOW / MEDIUM / HIGH) based on blast radius
 
 ### Test Coverage
-DataCI calculates what percentage of your models have at least one dbt test and flags:
+DaterCI calculates what percentage of your models have at least one dbt test and flags:
 - Overall project coverage
 - Changed models that are missing tests
 
@@ -103,14 +103,14 @@ DataCI calculates what percentage of your models have at least one dbt test and 
 Set `fail-on-missing-tests: true` to block PRs where new/changed models don't have tests. Set `coverage-threshold` to enforce a minimum coverage percentage.
 
 ### Smart Comment Updates
-DataCI posts one comment per PR and updates it on subsequent pushes — no comment spam.
+DaterCI posts one comment per PR and updates it on subsequent pushes — no comment spam.
 
 ---
 
 ## How It Works
 
 1. Your CI runs `dbt compile` to produce `manifest.json`
-2. DataCI parses the manifest to build the full dependency graph
+2. DaterCI parses the manifest to build the full dependency graph
 3. It diffs against the base branch to find changed models
 4. It traces downstream impact and calculates test coverage
 5. It posts (or updates) a single Markdown comment on the PR

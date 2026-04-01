@@ -32,7 +32,7 @@ def test_report_contains_all_sections():
 
     report = compose_report(changed, impact, coverage)
 
-    assert "DataCI Report" in report
+    assert "DaterCI Report" in report
     assert "Changed Models" in report
     assert "Impact Analysis" in report
     assert "Test Coverage" in report

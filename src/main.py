@@ -1,4 +1,4 @@
-"""DataCI entry point — orchestrates all modules."""
+"""DaterCI entry point — orchestrates all modules."""
 
 from __future__ import annotations
 
@@ -14,7 +14,7 @@ from src.report.github import get_pull_request, post_or_update_comment
 
 
 def run(config: Config) -> int:
-    """Run the DataCI pipeline. Returns exit code (0=success, 1=failure)."""
+    """Run the DaterCI pipeline. Returns exit code (0=success, 1=failure)."""
 
     # 1. Parse manifest
     print(f"Parsing manifest: {config.manifest_path}")

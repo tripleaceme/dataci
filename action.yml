@@ -1,4 +1,4 @@
-name: 'DataCI'
+name: 'DaterCI'
 description: 'CI/CD for analytics engineering — impact analysis, test coverage, and more for dbt PRs'
 author: 'Ayoade Adegbite'
 

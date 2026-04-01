@@ -1,8 +1,8 @@
-# CLAUDE.md — DataCI
+# CLAUDE.md — DaterCI
 
 > **"The missing CI layer for analytics engineering."**
 
-DataCI is a GitHub Action that turns every dbt PR into a fully analyzed, risk-aware, and cost-aware report. It combines **impact analysis**, **AI-powered review**, **query cost estimation**, **lineage snapshots**, and **test coverage reporting** into a single PR comment.
+DaterCI is a GitHub Action that turns every dbt PR into a fully analyzed, risk-aware, and cost-aware report. It combines **impact analysis**, **AI-powered review**, **query cost estimation**, **lineage snapshots**, and **test coverage reporting** into a single PR comment.
 
 ---
 
@@ -12,7 +12,7 @@ DataCI is a GitHub Action that turns every dbt PR into a fully analyzed, risk-aw
 
 Every dbt PR reviewer asks 5 questions — and currently guesses the answers:
 
-| Question | DataCI Module |
+| Question | DaterCI Module |
 |----------|---------------|
 | "What will this change break?" | **Impact Analyzer** |
 | "Is this change well-written and safe?" | **AI Reviewer** (Claude) |
@@ -20,7 +20,7 @@ Every dbt PR reviewer asks 5 questions — and currently guesses the answers:
 | "Where does this sit in the pipeline?" | **Lineage Snapshot** |
 | "Are we testing this properly?" | **Coverage Reporter** |
 
-DataCI answers all 5 in one PR comment.
+DaterCI answers all 5 in one PR comment.
 
 ### Target Users
 
@@ -45,7 +45,7 @@ DataCI answers all 5 in one PR comment.
 | Lineage in PRs | Recce (448 stars), Datafold (3k stars) | Partial | Yes (Recce) | No | Exists but complex/expensive |
 | dbt Best Practices | dbt-project-evaluator (547 stars), dbt-checkpoint (737 stars) | Partial | **No** | No | Poor PR UX |
 
-### DataCI's Whitespace
+### DaterCI's Whitespace
 
 1. **No AI-native dbt PR reviewer exists** — general tools (CodeRabbit, Qodo) have zero awareness of dbt patterns, data contracts, or warehouse costs
 2. **Query cost estimation in PRs is completely absent** — nobody posts "This PR increases spend by $X/day"
@@ -154,7 +154,7 @@ PR opened/updated
 ### Example PR Comment Output (Target UX)
 
 ```markdown
-## DataCI Report
+## DaterCI Report
 
 ### Impact Analysis
 - **6 downstream models** affected by changes to `stg_orders`
@@ -188,7 +188,7 @@ graph LR
 - Consider incremental materialization for `fct_orders` (currently table, 8.4 GB scan)
 
 ---
-*Powered by [DataCI](https://github.com/marketplace/actions/dataci) — CI/CD for analytics engineering*
+*Powered by [DaterCI](https://github.com/marketplace/actions/dataci) — CI/CD for analytics engineering*
 ```
 
 ---
@@ -318,7 +318,7 @@ docker run --rm -v $(pwd):/workspace dataci
 
 ## Naming & Positioning
 
-- **Name**: DataCI
+- **Name**: DaterCI
 - **Tagline**: "CI/CD for analytics engineering"
 - **Marketplace category**: Code quality / Testing
 - **Alternative names considered**: ModelGuard, dbtGuard, LineageCI

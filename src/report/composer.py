@@ -6,7 +6,7 @@ from src.dbt.changes import ChangedModel
 from src.dbt.coverage import CoverageReport
 from src.dbt.lineage import ImpactReport
 
-COMMENT_MARKER = "<!-- dataci-report -->"
+COMMENT_MARKER = "<!-- daterci-report -->"
 
 RISK_EMOJI = {
     "LOW": ":white_check_mark:",
@@ -23,7 +23,7 @@ def compose_report(
     """Build the full Markdown report for the PR comment."""
     sections = [
         COMMENT_MARKER,
-        "## :bar_chart: DataCI Report\n",
+        "## :bar_chart: DaterCI Report\n",
         _changes_section(changed_models),
         _impact_section(impact),
         _coverage_section(coverage),
@@ -107,6 +107,6 @@ def _coverage_section(coverage: CoverageReport) -> str:
 def _footer() -> str:
     return (
         "---\n"
-        "*Powered by [DataCI](https://github.com/marketplace/actions/dataci) "
+        "*Powered by [DaterCI](https://github.com/marketplace/actions/dataci) "
         "— CI/CD for analytics engineering*"
     )
