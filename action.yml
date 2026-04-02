@@ -33,12 +33,81 @@ inputs:
     default: '0'
 
 runs:
-  using: 'docker'
-  image: 'Dockerfile'
-  env:
-    INPUT_GITHUB_TOKEN: ${{ inputs.github-token }}
-    INPUT_PROJECT_DIR: ${{ inputs.project-dir }}
-    INPUT_MANIFEST_PATH: ${{ inputs.manifest-path }}
-    INPUT_DBT_VERSION: ${{ inputs.dbt-version }}
-    INPUT_FAIL_ON_MISSING_TESTS: ${{ inputs.fail-on-missing-tests }}
-    INPUT_COVERAGE_THRESHOLD: ${{ inputs.coverage-threshold }}
+  using: 'composite'
+  steps:
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install DataCI dependencies
+      shell: bash
+      run: pip install --quiet PyGithub PyYAML
+
+    - name: Install dbt (for manifest generation)
+      if: ${{ inputs.manifest-path == '' }}
+      shell: bash
+      run: pip install --quiet dbt-core==${{ inputs.dbt-version }} dbt-postgres
+
+    - name: Generate manifest
+      if: ${{ inputs.manifest-path == '' }}
+      shell: bash
+      working-directory: ${{ inputs.project-dir }}
+      run: |
+        # Read profile name from dbt_project.yml
+        PROFILE_NAME=$(python3 -c "
+        import yaml
+        with open('dbt_project.yml') as f:
+            print(yaml.safe_load(f)['profile'])
+        ")
+        echo "Detected dbt profile: $PROFILE_NAME"
+
+        # Create dummy profiles.yml (dbt parse never connects to the database)
+        mkdir -p .dataci_profiles
+        cat > .dataci_profiles/profiles.yml << PROFILES_EOF
+        ${PROFILE_NAME}:
+          target: ci
+          outputs:
+            ci:
+              type: postgres
+              host: localhost
+              port: 5432
+              user: ci
+              password: ci
+              dbname: ci
+              schema: public
+        PROFILES_EOF
+
+        # Install dbt packages if needed
+        if [ -f "packages.yml" ] || [ -f "dependencies.yml" ]; then
+          echo "Running dbt deps..."
+          dbt deps --profiles-dir .dataci_profiles || echo "Warning: dbt deps failed, continuing..."
+        fi
+
+        # Generate manifest.json
+        echo "Running dbt parse..."
+        dbt parse --profiles-dir .dataci_profiles
+
+        # Clean up dummy profiles
+        rm -rf .dataci_profiles
+
+    - name: Run DataCI analysis
+      shell: bash
+      env:
+        INPUT_GITHUB_TOKEN: ${{ inputs.github-token }}
+        INPUT_PROJECT_DIR: ${{ inputs.project-dir }}
+        INPUT_MANIFEST_PATH: ${{ inputs.manifest-path }}
+        INPUT_DBT_VERSION: ${{ inputs.dbt-version }}
+        INPUT_FAIL_ON_MISSING_TESTS: ${{ inputs.fail-on-missing-tests }}
+        INPUT_COVERAGE_THRESHOLD: ${{ inputs.coverage-threshold }}
+        GITHUB_REPOSITORY: ${{ github.repository }}
+        GITHUB_EVENT_NAME: ${{ github.event_name }}
+        GITHUB_REF: ${{ github.ref }}
+        GITHUB_SHA: ${{ github.sha }}
+      run: |
+        # If no manifest-path provided, use the one dbt parse generated
+        if [ -z "$INPUT_MANIFEST_PATH" ]; then
+          export INPUT_MANIFEST_PATH="${{ inputs.project-dir }}/target/manifest.json"
+        fi
+
+        PYTHONPATH=${{ github.action_path }} python3 -m src.main

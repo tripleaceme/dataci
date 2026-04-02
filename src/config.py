@@ -8,10 +8,9 @@ from dataclasses import dataclass
 
 @dataclass(frozen=True)
 class Config:
-    manifest_path: str  # empty string means auto-generate
+    manifest_path: str
     github_token: str
     project_dir: str
-    dbt_version: str
     fail_on_missing_tests: bool
     coverage_threshold: float
 
@@ -20,10 +19,6 @@ class Config:
     github_event_name: str  # pull_request, push, etc.
     pr_number: int | None
     github_sha: str
-
-    @property
-    def auto_generate_manifest(self) -> bool:
-        return not self.manifest_path
 
     @classmethod
     def from_env(cls) -> Config:
@@ -38,10 +33,9 @@ class Config:
                 pr_number = int(parts[2])
 
         return cls(
-            manifest_path=os.environ.get("INPUT_MANIFEST_PATH", ""),
+            manifest_path=os.environ.get("INPUT_MANIFEST_PATH", "target/manifest.json"),
             github_token=os.environ.get("INPUT_GITHUB_TOKEN", ""),
             project_dir=os.environ.get("INPUT_PROJECT_DIR", "."),
-            dbt_version=os.environ.get("INPUT_DBT_VERSION", "1.9.0"),
             fail_on_missing_tests=os.environ.get("INPUT_FAIL_ON_MISSING_TESTS", "false").lower() == "true",
             coverage_threshold=float(os.environ.get("INPUT_COVERAGE_THRESHOLD", "0")),
             github_repository=os.environ.get("GITHUB_REPOSITORY", ""),
